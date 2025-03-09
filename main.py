@@ -23,10 +23,10 @@ class SetuPlugin(Star):
                 if len(self.setu_image) <= 9:
                     try:
                         async with httpx.AsyncClient(timeout=10.0) as client:
-                        resp = await client.get("https://api.lolicon.app/setu/v2?r18=0")
-                        resp.raise_for_status()
-                        image_url = resp.json()['data'][0]['urls']['original']
-                        self.setu_image.append(Image.fromURL(image_url, size='small'))
+                            resp = await client.get("https://api.lolicon.app/setu/v2?r18=0")
+                            resp.raise_for_status()
+                            image_url = resp.json()['data'][0]['urls']['original']
+                            self.setu_image.append(Image.fromURL(image_url, size='small'))
                     # except httpx.HTTPStatusError as e:
                     #     yield event.plain_result(f"获取涩图时发生HTTP错误: {e.response.status_code}")
                     # except httpx.TimeoutException:
