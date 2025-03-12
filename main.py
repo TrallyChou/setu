@@ -25,15 +25,24 @@ class SetuPlugin(Star):
                             resp = await client.get("https://api.lolicon.app/setu/v2?r18=0")
                             resp.raise_for_status()
                             image_url = resp.json()['data'][0]['urls']['original']
-                            tmp = Image.fromURL(image_url)
-                            self.setu_image.append(tmp)
+                            
+                            def sync_work():
+                                Image.fromURL(image_url, size='small')
+                                self.setu_image.append(tmp)
+                                
+                            await loop.run_in_executor(None, sync_work)
+                            
                         
                         async with httpx.AsyncClient(timeout=10.0) as client:
                             resp = await client.get("https://api.lolicon.app/setu/v2?r18=1")
                             resp.raise_for_status()
                             image_url = resp.json()['data'][0]['urls']['original']
-                            tmp = Image.fromURL(image_url)
-                            self.r18image.append(tmp)
+                            def sync_work():
+                                Image.fromURL(image_url, size='small')
+                                self.setu_image.append(tmp)
+               
+                            await loop.run_in_executor(None, sync_work)
+                            
                            
                         
                     # except httpx.HTTPStatusError as e:
