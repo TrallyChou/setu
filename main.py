@@ -22,24 +22,24 @@ class SetuPlugin(Star):
                 if len(self.setu_image) <= 9 or len(self.r18image) <=9:
                     try:
                         async with httpx.AsyncClient(timeout=10.0) as client:
-                        resp = await client.get("https://api.lolicon.app/setu/v2?r18=0")
-                        resp.raise_for_status()
-                        image_url = resp.json()['data'][0]['urls']['original']
-                        tmp = await loop.run_in_executor(
-                        executor=None,  # 使用默认线程池
-                        func=Image.fromURL(image_url, size='small')
-                        )
-                        self.setu_image.append(tmp)
+                            resp = await client.get("https://api.lolicon.app/setu/v2?r18=0")
+                            resp.raise_for_status()
+                            image_url = resp.json()['data'][0]['urls']['original']
+                            tmp = await loop.run_in_executor(
+                            executor=None,  # 使用默认线程池
+                            func=Image.fromURL(image_url, size='small')
+                            )
+                            self.setu_image.append(tmp)
                         
                         async with httpx.AsyncClient(timeout=10.0) as client:
-                        resp = await client.get("https://api.lolicon.app/setu/v2?r18=1")
-                        resp.raise_for_status()
-                        image_url = resp.json()['data'][0]['urls']['original']
-                        tmp = await loop.run_in_executor(
-                        executor=None,  # 使用默认线程池
-                        func=Image.fromURL(image_url, size='small')
-                        )
-                        self.r18image.append(tmp)
+                            resp = await client.get("https://api.lolicon.app/setu/v2?r18=1")
+                            resp.raise_for_status()
+                            image_url = resp.json()['data'][0]['urls']['original']
+                            tmp = await loop.run_in_executor(
+                            executor=None,  # 使用默认线程池
+                            func=Image.fromURL(image_url, size='small')
+                            )
+                            self.r18image.append(tmp)
                            
                         
                     # except httpx.HTTPStatusError as e:
