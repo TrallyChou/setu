@@ -26,8 +26,11 @@ class SetuPlugin(Star):
                         resp = await client.get("https://api.lolicon.app/setu/v2?r18=0")
                         resp.raise_for_status()
                         image_url = resp.json()['data'][0]['urls']['original']
-                        tmp = Image.fromURL(image_url)
-                        self.setu_image.append(tmp)
+
+                    tmp = Image.fromURL(image_url)
+                    self.setu_image.append(tmp)
+
+
                 except Exception as e:
                     self.context.logger.exception("Setu command error:")  # 记录异常，方便调试
             if len(self.r18image) <= 9:
@@ -36,8 +39,13 @@ class SetuPlugin(Star):
                         resp = await client.get("https://api.lolicon.app/setu/v2?r18=1")
                         resp.raise_for_status()
                         image_url = resp.json()['data'][0]['urls']['original']
+
+
                         tmp = Image.fromURL(image_url)
-                        self.setu_image.append(tmp)
+                        self.r18image.append(tmp)
+
+
+
 
                 # except httpx.HTTPStatusError as e:
                 #     yield event.plain_result(f"获取涩图时发生HTTP错误: {e.response.status_code}")
@@ -75,6 +83,7 @@ class SetuPlugin(Star):
                             ]
                         }
                     })
+                payloads = {payloads}
                 ret = await client.api.call_action('delete_msg', **payloads) # 调用 协议端  API
 
         else:
