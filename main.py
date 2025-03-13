@@ -59,7 +59,7 @@ class SetuPlugin(Star):
                     self.context.logger.exception("Setu command error:")  # 记录异常，方便调试
 
     @filter.command("setu", alias=["来一张", "涩图"])
-    async def setu(self, event: AstrMessageEvent, count: int):
+    async def setu(self, event: AstrMessageEvent, count=0):
         if len(self.setu_image) != 0:
             if count == 0:
                 chain = [
@@ -71,26 +71,16 @@ class SetuPlugin(Star):
             else:
                 assert isinstance(event, AiocqhttpMessageEvent)
                 client = event.bot
-                messages = []
+                nodes = []
                 for nothing in range(1, count):
-                    messages.append({
-                        "type": "node",
-                        "data": {
-                            "user_id": "robot",
-                            "nickname": "730394312",
-                            "content": [
-                                self.setu_image.pop(0)
-                            ]
-                        }
-                    })
-                if event.get_message_type() == MessageType.GROUP_MESSAGE:
-                    payloads = {"group_id": event.get_group_id(),
-                                "messages": messages}
-                    ret = await client.api.call_action('/send_group_forward_msg', **payloads)  # 调用 协议端  API
-                elif event.get_message_type() == MessageType.FRIEND_MESSAGE:
-                    payloads = {"user_id": event.get_sender_id(),
-                                "messages": messages}
-                    ret = await client.api.call_action('/send_private_msg', **payloads)  # 调用 协议端  API
+                    node = Node(
+                        uin=730394312,
+                        name="robot",
+                        content=[
+                            self.setu_image.pop(0)
+                        ])
+                    nodes.append(node)
+                yield event.chain_result(nodes)
 
         else:
             yield event.plain_result("没有找到涩图。")
