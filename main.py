@@ -60,7 +60,7 @@ class SetuPlugin(Star):
     async def setu(self, event: AstrMessageEvent, count=0):
         if len(self.setu_image) != 0:
             cont = []
-            for nothing in range(1, max(count, len(self.setu_image))):
+            for nothing in range(1, min(count, len(self.setu_image))):
                 cont.append(self.setu_image.pop(0))
 
             node = Node(
