@@ -67,14 +67,14 @@ class SetuPlugin(Star):
                 ]
                 yield event.chain_result(chain)
             else:
-                cont = []
-                for nothing in range(1, count):
-                    cont.append(self.setu_image.pop(0))
-                    cont.append(Plain("\n"))
+                # cont = []
+                # for nothing in range(1, count):
+                #     cont.append()
+                #     cont.append(Plain("\n"))
                 node = Node(
                     uin=730394312,
                     name="robot",
-                    content=cont
+                    content=[self.setu_image.pop(0)]
                 )
                 yield event.chain_result([node])
 
