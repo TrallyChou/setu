@@ -69,7 +69,7 @@ class SetuPlugin(Star):
                 chain = [
                     At(qq=event.get_sender_id()),
                     # Plain("给你一张涩图："),
-                    self.r18image.pop(0),
+                    self.setu_image.pop(0),
                 ]
                 yield event.chain_result(chain)
             else:
