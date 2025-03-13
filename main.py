@@ -5,8 +5,6 @@ import httpx
 from astrbot.api.event import filter, AstrMessageEvent
 from astrbot.api.message_components import *
 from astrbot.api.star import Context, Star, register
-from astrbot.core.platform import MessageType
-from astrbot.core.platform.sources.aiocqhttp.aiocqhttp_message_event import AiocqhttpMessageEvent
 
 
 @register("插画展示", "Trally", "色色", "0.1")
@@ -59,7 +57,7 @@ class SetuPlugin(Star):
                     self.context.logger.exception("Setu command error:")  # 记录异常，方便调试
 
     @filter.command("setu", alias={"来一张", "涩图"})
-    async def setu(self, event: AstrMessageEvent, count: int):
+    async def setu(self, event: AstrMessageEvent, count=0):
         if len(self.setu_image) != 0:
             if count == 0:
                 chain = [
@@ -69,16 +67,16 @@ class SetuPlugin(Star):
                 ]
                 yield event.chain_result(chain)
             else:
-                nodes = []
+                cont = []
                 for nothing in range(1, count):
-                    node = Node(
-                        uin=730394312,
-                        name="robot",
-                        content=[
-                            self.setu_image.pop(0)
-                        ])
-                    nodes.append(node)
-                yield event.chain_result(nodes)
+                    cont.append(self.setu_image.pop(0))
+                    cont.append(Plain("\n"))
+                node = Node(
+                    uin=730394312,
+                    name="robot",
+                    content=cont
+                )
+                yield event.chain_result([node])
 
         else:
             yield event.plain_result("没有找到涩图。")
