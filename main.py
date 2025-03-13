@@ -58,8 +58,8 @@ class SetuPlugin(Star):
                 except Exception as e:
                     self.context.logger.exception("Setu command error:")  # 记录异常，方便调试
 
-    @filter.command("setu", alias=["来一张", "涩图"])
-    async def setu(self, event: AstrMessageEvent, count=0):
+    @filter.command("setu", alias={"来一张", "涩图"})
+    async def setu(self, event: AstrMessageEvent, count: int):
         if len(self.setu_image) != 0:
             if count == 0:
                 chain = [
