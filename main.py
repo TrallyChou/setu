@@ -17,36 +17,42 @@ class SetuPlugin(Star):
         asyncio.create_task(self.fetch_setu())
 
     async def fetch_setu(self):
-            while True:
-                await asyncio.sleep(10)
-                if len(self.setu_image) <= 9 or len(self.r18image) <=9:
-                    try:
-                        async with httpx.AsyncClient(timeout=10.0) as client:
-                            resp = await client.get("https://api.lolicon.app/setu/v2?r18=0")
-                            resp.raise_for_status()
-                            image_url = resp.json()['data'][0]['urls']['original']
+        while True:
+            await asyncio.sleep(10)
+            if len(self.setu_image) <= 9 or len(self.r18image) <= 9:
+                try:
+                    async with httpx.AsyncClient(timeout=10.0) as client:
+                        resp = await client.get("https://api.lolicon.app/setu/v2?r18=0")
+                        resp.raise_for_status()
+                        image_url = resp.json()['data'][0]['urls']['original']
+
+                        def tmp_fun():
                             tmp = Image.fromURL(image_url)
                             self.setu_image.append(tmp)
-                        
-                        async with httpx.AsyncClient(timeout=10.0) as client:
-                            resp = await client.get("https://api.lolicon.app/setu/v2?r18=1")
-                            resp.raise_for_status()
-                            image_url = resp.json()['data'][0]['urls']['original']
+
+                        await asyncio.get_running_loop().run_in_executor(None, tmp_fun)
+
+                    async with httpx.AsyncClient(timeout=10.0) as client:
+                        resp = await client.get("https://api.lolicon.app/setu/v2?r18=1")
+                        resp.raise_for_status()
+                        image_url = resp.json()['data'][0]['urls']['original']
+
+                        def tmp_fun():
                             tmp = Image.fromURL(image_url)
                             self.r18image.append(tmp)
-                           
-                        
-                    # except httpx.HTTPStatusError as e:
-                    #     yield event.plain_result(f"获取涩图时发生HTTP错误: {e.response.status_code}")
-                    # except httpx.TimeoutException:
-                    #     yield event.plain_result("获取涩图超时，请稍后重试。")
-                    # except httpx.HTTPError as e:
-                    #     yield event.plain_result(f"获取涩图时发生网络错误: {e}")
-                    # except json.JSONDecodeError as e:
-                    #     yield event.plain_result(f"解析JSON时发生错误: {e}")
-                    except Exception as e:
-                        self.context.logger.exception("Setu command error:")  # 记录异常，方便调试
-            return
+                        await asyncio.get_running_loop().run_in_executor(None, tmp_fun)
+
+
+                # except httpx.HTTPStatusError as e:
+                #     yield event.plain_result(f"获取涩图时发生HTTP错误: {e.response.status_code}")
+                # except httpx.TimeoutException:
+                #     yield event.plain_result("获取涩图超时，请稍后重试。")
+                # except httpx.HTTPError as e:
+                #     yield event.plain_result(f"获取涩图时发生网络错误: {e}")
+                # except json.JSONDecodeError as e:
+                #     yield event.plain_result(f"解析JSON时发生错误: {e}")
+                except Exception as e:
+                    self.context.logger.exception("Setu command error:")  # 记录异常，方便调试
 
     @filter.command("setu")
     async def setu(self, event: AstrMessageEvent):
@@ -71,7 +77,7 @@ class SetuPlugin(Star):
             yield event.chain_result(chain)
         else:
             yield event.plain_result("没有找到涩图。")
-        
+
     @filter.command("setu_help")
     async def setu_help(self, event: AstrMessageEvent):
         help_text = """
