@@ -19,7 +19,7 @@ class SetuPlugin(Star):
     async def fetch_setu(self):
         while True:
             await asyncio.sleep(10)
-            if len(self.setu_image) <= 9:
+            if len(self.setu_image) <= 20:
                 try:
                     async with httpx.AsyncClient(timeout=10.0) as client:
                         resp = await client.get("https://api.lolicon.app/setu/v2?r18=0")
@@ -59,16 +59,24 @@ class SetuPlugin(Star):
     @filter.command("setu", alias={"来一张", "涩图"})
     async def setu(self, event: AstrMessageEvent, count=0):
         if len(self.setu_image) != 0:
-            cont = []
-            for nothing in range(1, min(count, len(self.setu_image))):
-                cont.append(self.setu_image.pop(0))
+            if count==0:
+                chain = [
+                    At(qq=event.get_sender_id()),
+                    # Plain("给你一张涩图："),
+                    self.r18image.pop(0),
+                ]
+                yield event.chain_result(chain)
+            else:
+                cont = []
+                for nothing in range(1, min(count, len(self.setu_image))):
+                    cont.append(self.setu_image.pop(0))
 
-            node = Node(
-                uin=730394312,
-                name="robot",
-                content=cont
-            )
-            yield event.chain_result([node])
+                node = Node(
+                    uin=730394312,
+                    name="robot",
+                    content=cont
+                )
+                yield event.chain_result([node])
 
         else:
             yield event.plain_result("没有找到涩图。")
