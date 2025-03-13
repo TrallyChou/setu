@@ -59,25 +59,16 @@ class SetuPlugin(Star):
     @filter.command("setu", alias={"来一张", "涩图"})
     async def setu(self, event: AstrMessageEvent, count=0):
         if len(self.setu_image) != 0:
-            if count == 0:
-                chain = [
-                    At(qq=event.get_sender_id()),
-                    Plain("给你一张涩图："),
-                    self.setu_image.pop(0),
-                ]
-                yield event.chain_result(chain)
-            else:
-                # cont = []
-                # for nothing in range(1, count):
-                #     cont.append()
-                #     cont.append(Plain("\n"))
-                node = Node(
-                    uin=730394312,
-                    name="robot",
-                    content=[self.setu_image.pop(0),
-                             self.setu_image.pop(0)]
-                )
-                yield event.chain_result([node])
+            cont = []
+            for nothing in range(1, max(count, len(self.setu_image))):
+                cont.append(self.setu_image.pop(0))
+
+            node = Node(
+                uin=730394312,
+                name="robot",
+                content=cont
+            )
+            yield event.chain_result([node])
 
         else:
             yield event.plain_result("没有找到涩图。")
