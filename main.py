@@ -40,7 +40,6 @@ class SetuPlugin(Star):
                         resp.raise_for_status()
                         image_url = resp.json()['data'][0]['urls']['original']
 
-
                         tmp = Image.fromURL(image_url)
                         self.r18image.append(tmp)
 
@@ -71,9 +70,9 @@ class SetuPlugin(Star):
             else:
                 assert isinstance(event, AiocqhttpMessageEvent)
                 client = event.bot
-                payloads = []
-                for nothing in range(1,count):
-                    payloads.append({
+                messages = []
+                for nothing in range(1, count):
+                    messages.append({
                         "type": "node",
                         "data": {
                             "name": "robot",
@@ -83,8 +82,9 @@ class SetuPlugin(Star):
                             ]
                         }
                     })
-                payloads = {payloads}
-                ret = await client.api.call_action('delete_msg', **payloads) # 调用 协议端  API
+                payloads = {"group_id": event.get_group_id(),
+                            "messages": messages}
+                ret = await client.api.call_action('delete_msg', **payloads)  # 调用 协议端  API
 
         else:
             yield event.plain_result("没有找到涩图。")
