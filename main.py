@@ -69,8 +69,6 @@ class SetuPlugin(Star):
                 ]
                 yield event.chain_result(chain)
             else:
-                assert isinstance(event, AiocqhttpMessageEvent)
-                client = event.bot
                 nodes = []
                 for nothing in range(1, count):
                     node = Node(
