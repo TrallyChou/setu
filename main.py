@@ -63,9 +63,9 @@ class SetuPlugin(Star):
             count = int(message[message.find(" ")])
         except ValueError as e:
             count = 0
-            
+
         if len(self.setu_image) != 0:
-            if count is None:
+            if count == 0:
                 chain = [
                     At(qq=event.get_sender_id()),
                     # Plain("给你一张涩图："),
