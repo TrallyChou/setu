@@ -74,7 +74,8 @@ class SetuPlugin(Star):
                 node = Node(
                     uin=730394312,
                     name="robot",
-                    content=[self.setu_image.pop(0)]
+                    content=[self.setu_image.pop(0),
+                             self.setu_image.pop(0)]
                 )
                 yield event.chain_result([node])
 
