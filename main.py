@@ -60,7 +60,7 @@ class SetuPlugin(Star):
     async def setu(self, event: AstrMessageEvent):
         message = event.get_message_str()
         try:
-            count = int(message[message.find(" ")])
+            count = int(message[message.find(" ")+1:])
         except ValueError as e:
             count = 0
 
