@@ -5,6 +5,7 @@ import httpx
 from astrbot.api.event import filter, AstrMessageEvent
 from astrbot.api.message_components import *
 from astrbot.api.star import Context, Star, register
+from astrbot.core.platform import MessageType
 from astrbot.core.platform.sources.aiocqhttp.aiocqhttp_message_event import AiocqhttpMessageEvent
 
 
@@ -75,16 +76,21 @@ class SetuPlugin(Star):
                     messages.append({
                         "type": "node",
                         "data": {
-                            "name": "robot",
-                            "uin": "730394312",
+                            "user_id": "robot",
+                            "nickname": "730394312",
                             "content": [
                                 self.setu_image.pop(0)
                             ]
                         }
                     })
-                payloads = {"group_id": event.get_group_id(),
-                            "messages": messages}
-                ret = await client.api.call_action('delete_msg', **payloads)  # 调用 协议端  API
+                if event.get_message_type() == MessageType.GROUP_MESSAGE:
+                    payloads = {"group_id": event.get_group_id(),
+                                "messages": messages}
+                    ret = await client.api.call_action('/send_group_forward_msg', **payloads)  # 调用 协议端  API
+                elif event.get_message_type() == MessageType.FRIEND_MESSAGE:
+                    payloads = {"user_id": event.get_sender_id(),
+                                "messages": messages}
+                    ret = await client.api.call_action('/send_private_msg', **payloads)  # 调用 协议端  API
 
         else:
             yield event.plain_result("没有找到涩图。")
